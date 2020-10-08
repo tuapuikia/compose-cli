@@ -53,7 +53,13 @@ func TestSecrets(t *testing.T) {
 	description := "description " + testID
 
 	t.Run("create secret", func(t *testing.T) {
-		res := cmd.RunDockerCmd("secret", "create", secretName, "-u", "user1", "-p", "pass1", "-d", description)
+		c := cmd.NewDockerCmd("secret", "create", "-d", description, secretName, "-")
+		res := icmd.StartCmd(c)
+		stdin, err := res.Cmd.StdinPipe()
+		assert.NilError(t, err)
+		fmt.Fprintln(stdin, "pass1")
+		assert.NilError(t, stdin.Close())
+		assert.NilError(t, res.Cmd.Wait())
 		assert.Check(t, strings.Contains(res.Stdout(), "secret:"+secretName))
 	})
 
