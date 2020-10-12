@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2/terminal"
@@ -260,15 +259,6 @@ func contains(values []string, value string) bool {
 		}
 	}
 	return false
-}
-
-func keys(section map[string]ini.Section) []string {
-	keys := reflect.ValueOf(section).MapKeys()
-	profiles := make([]string, len(keys))
-	for i := 0; i < len(keys); i++ {
-		profiles[i] = keys[i].String()
-	}
-	return profiles
 }
 
 func loadIniFile(path string, prefix bool) (map[string]ini.Section, error) {
